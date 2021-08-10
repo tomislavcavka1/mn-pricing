@@ -1,12 +1,17 @@
 plugins {
-    id("com.github.johnrengelman.shadow") version "5.1.0"
+    id("com.github.johnrengelman.shadow") version "6.1.0"
     id("io.micronaut.application") version "1.5.3"
 }
 
 version = "0.1"
 group = "com.danielprinz.udemy"
 
+application {
+    mainClass.set("com.danielprinz.udemy.Application")
+}
+
 repositories {
+    gradlePluginPortal()
     mavenCentral()
 }
 
@@ -20,24 +25,27 @@ micronaut {
 }
 
 dependencies {
+    annotationProcessor(platform("io.micronaut:micronaut-bom:$micronautVersion"))
+    annotationProcessor("io.micronaut:micronaut-inject-java")
+    annotationProcessor("io.micronaut:micronaut-validation")
+    annotationProcessor("io.micronaut:micronaut-graal")
+    implementation(platform("io.micronaut:micronaut-bom:$micronautVersion"))
+    compileOnly("org.graalvm.nativeimage:svm")
     implementation("io.micronaut:micronaut-runtime")
     implementation("io.micronaut.kafka:micronaut-kafka")
     implementation("javax.annotation:javax.annotation-api")
     runtimeOnly("ch.qos.logback:logback-classic")
     implementation("io.micronaut:micronaut-validation")
+    compileClasspath('com.github.jengelman.gradle.plugins:shadow:6.1.0')
 
     testImplementation("io.micronaut:micronaut-http-client")
     testImplementation("org.awaitility:awaitility:4.1.0")
     // TestContainers
-    testCompile("org.testcontainers:testcontainers:$testcontainersVersion")
-    testCompile("org.testcontainers:junit-jupiter:$testcontainersVersion")
-    testCompile("org.testcontainers:kafka:$testcontainersVersion")
+    testImplementation("org.testcontainers:testcontainers:$testcontainersVersion")
+    testImplementation("org.testcontainers:junit-jupiter:$testcontainersVersion")
+    testImplementation("org.testcontainers:kafka:$testcontainersVersion")
 }
 
-
-application {
-    mainClass.set("com.danielprinz.udemy.Application")
-}
 java {
     sourceCompatibility = JavaVersion.toVersion("11")
     targetCompatibility = JavaVersion.toVersion("11")
